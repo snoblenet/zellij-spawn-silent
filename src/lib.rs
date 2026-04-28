@@ -47,11 +47,9 @@ impl ZellijPlugin for SpawnSilent {
 
     fn update(&mut self, event: Event) -> bool {
         if let Event::CommandPaneOpened(terminal_pane_id, context) = event {
-            let should_float = context
-                .get("float")
-                .map(|v| v == "true")
-                .unwrap_or(false);
-            show_pane_with_id(PaneId::Terminal(terminal_pane_id), should_float, false);
+            if let Some(should_float) = context.get("float").map(|v| v == "true") {
+                show_pane_with_id(PaneId::Terminal(terminal_pane_id), should_float, false);
+            }
         }
         false
     }
