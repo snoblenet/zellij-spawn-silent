@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use zellij_tile::prelude::*;
 
 #[derive(Default)]
@@ -17,7 +18,7 @@ struct SpawnRequest {
 
 impl ZellijPlugin for SpawnSilent {
     fn load(&mut self, _configuration: BTreeMap<String, String>) {
-        subscribe(&[EventNameList::CommandPaneOpened]);
+        subscribe(&[EventType::CommandPaneOpened]);
     }
 
     fn pipe(&mut self, pipe_message: PipeMessage) -> bool {
@@ -70,10 +71,8 @@ mod tests {
 
     #[test]
     fn full_request_parses_all_fields() {
-        let req = parse(
-            r#"{"command":"htop","args":["-d","5"],"cwd":"/tmp","float":true}"#,
-        )
-        .unwrap();
+        let req =
+            parse(r#"{"command":"htop","args":["-d","5"],"cwd":"/tmp","float":true}"#).unwrap();
         assert_eq!(req.command, "htop");
         assert_eq!(req.args, vec!["-d", "5"]);
         assert_eq!(req.cwd.as_deref(), Some("/tmp"));

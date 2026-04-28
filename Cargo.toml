@@ -8,6 +8,13 @@ description = "A Zellij plugin that spawns a command pane without stealing focus
 [lib]
 crate-type = ["cdylib"]
 
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
+
 [dependencies]
 zellij-tile = "0.44.1"
 serde = { version = "1", features = ["derive"] }
