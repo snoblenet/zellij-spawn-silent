@@ -19,20 +19,18 @@ zellij pipe --plugin zellij-spawn-silent -- '{
   "command": "htop",
   "args": ["-d", "10"],
   "cwd": "/tmp",
-  "float": true,
-  "direction": "right"
+  "float": true
 }'
 ```
 
 ## JSON fields
 
-| Field       | Type             | Required | Default | Description                          |
-| ----------- | ---------------- | -------- | ------- | ------------------------------------ |
-| `command`   | string           | yes      |         | Command to run                       |
-| `args`      | array of strings | no       | `[]`    | Arguments passed to the command      |
-| `cwd`       | string           | no       | none    | Working directory for the command    |
-| `float`     | bool             | no       | `false` | Open as a floating pane              |
-| `direction` | string           | no       | none    | Split direction (e.g. `"right"`)     |
+| Field     | Type             | Required | Default | Description                       |
+| --------- | ---------------- | -------- | ------- | --------------------------------- |
+| `command` | string           | yes      |         | Command to run                    |
+| `args`    | array of strings | no       | `[]`    | Arguments passed to the command   |
+| `cwd`     | string           | no       | none    | Working directory for the command |
+| `float`   | bool             | no       | `false` | Open as a floating pane           |
 
 ## Building
 

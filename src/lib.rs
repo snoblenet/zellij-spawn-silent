@@ -13,7 +13,6 @@ struct SpawnRequest {
     cwd: Option<String>,
     #[serde(default)]
     float: bool,
-    direction: Option<String>,
 }
 
 impl ZellijPlugin for SpawnSilent {
@@ -37,9 +36,6 @@ impl ZellijPlugin for SpawnSilent {
 
         let mut context = BTreeMap::new();
         context.insert("float".to_string(), req.float.to_string());
-        if let Some(dir) = req.direction {
-            context.insert("direction".to_string(), dir);
-        }
 
         open_command_pane_background(cmd, context);
         false
