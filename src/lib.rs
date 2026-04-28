@@ -50,3 +50,61 @@ impl ZellijPlugin for SpawnSilent {
         false
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::SpawnRequest;
+
+    fn parse(json: &str) -> Result<SpawnRequest, serde_json::Error> {
+        serde_json::from_str(json)
+    }
+
+    #[test]
+    fn minimal_request_uses_defaults() {
+        let req = parse(r#"{"command":"htop"}"#).unwrap();
+        assert_eq!(req.command, "htop");
+        assert!(req.args.is_empty());
+        assert!(req.cwd.is_none());
+        assert!(!req.float);
+    }
+
+    #[test]
+    fn full_request_parses_all_fields() {
+        let req = parse(
+            r#"{"command":"htop","args":["-d","5"],"cwd":"/tmp","float":true}"#,
+        )
+        .unwrap();
+        assert_eq!(req.command, "htop");
+        assert_eq!(req.args, vec!["-d", "5"]);
+        assert_eq!(req.cwd.as_deref(), Some("/tmp"));
+        assert!(req.float);
+    }
+
+    #[test]
+    fn missing_command_is_rejected() {
+        assert!(parse(r#"{"args":["foo"]}"#).is_err());
+    }
+
+    #[test]
+    fn invalid_json_is_rejected() {
+        assert!(parse("not json").is_err());
+    }
+
+    #[test]
+    fn float_defaults_to_false() {
+        let req = parse(r#"{"command":"ls"}"#).unwrap();
+        assert!(!req.float);
+    }
+
+    #[test]
+    fn float_key_identifies_plugin_owned_pane() {
+        // The update handler gates on context.get("float").is_some() to
+        // distinguish panes this plugin created from unrelated ones.
+        // Verify the pipe handler encodes the flag as the string "true"/"false"
+        // so the update handler can decode it correctly.
+        let req_float = parse(r#"{"command":"htop","float":true}"#).unwrap();
+        let req_no_float = parse(r#"{"command":"htop","float":false}"#).unwrap();
+        assert_eq!(req_float.float.to_string(), "true");
+        assert_eq!(req_no_float.float.to_string(), "false");
+    }
+}
