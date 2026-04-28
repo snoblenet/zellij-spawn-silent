@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "→ cargo fmt --check"
+cargo fmt --check
+
+echo "→ cargo clippy --target wasm32-wasip1"
+cargo clippy --target wasm32-wasip1 -- -D warnings
+
+echo "✓ pre-commit checks passed"
